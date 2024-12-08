@@ -52,14 +52,14 @@ export const tasksReducer = (state: TaskStateType, action: ActionsTypes): TaskSt
         }
         case 'CHANGE-CHEKED-TASK':{
             let copyState ={...state}
-            copyState[action.todolistId].map((el)=>{
+            copyState[action.todolistId].forEach((el)=>{
                 if(el.id===action.taskId){
                     if (el) {
                         el.isDone= !el.isDone
-                        console.log(el)
                     }
                 }
             })
+            debugger
             return copyState
         }
 
