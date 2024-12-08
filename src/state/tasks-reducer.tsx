@@ -17,7 +17,8 @@ export type ActionAddTaskType = {
 export type ChangeCheckedTaskActionType = {
     type: 'CHANGE-CHEKED-TASK'
     todolistId:string
-    taskId:string
+    taskId:string;
+    isChecked: boolean
 }
 
 export type ChangeTaskTitleActionType = {
@@ -52,14 +53,16 @@ export const tasksReducer = (state: TaskStateType, action: ActionsTypes): TaskSt
         }
         case 'CHANGE-CHEKED-TASK':{
             let copyState ={...state}
-            copyState[action.todolistId].map((el)=>{
+            copyState[action.todolistId]=copyState[action.todolistId].map((el)=>{
                 if(el.id===action.taskId){
                     if (el) {
-                        el.isDone= !el.isDone
-                        console.log(el)
+                        el.isDone=false
                     }
                 }
+                return el
             })
+
+
             return copyState
         }
 
@@ -99,8 +102,8 @@ export const addTaskAC = (todolistId:string, title:string):ActionAddTaskType =>{
     return {type: 'ADD-TASK',todolistId: todolistId , title:title}
 }
 
-export const changeCheckedTaskAC = (todolistId:string, taskId:string):ChangeCheckedTaskActionType =>{
-    return {type: 'CHANGE-CHEKED-TASK',todolistId: todolistId , taskId:taskId}
+export const changeCheckedTaskAC = (todolistId:string, taskId:string, isChecked: boolean):ChangeCheckedTaskActionType =>{
+    return {type: 'CHANGE-CHEKED-TASK',todolistId , taskId, isChecked}
 }
 
 export const  changeTaskTitleAC = (todolistId:string, taskId:string, title:string):ChangeTaskTitleActionType =>{

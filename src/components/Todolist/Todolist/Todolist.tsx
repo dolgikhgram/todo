@@ -17,7 +17,7 @@ type PropsType = {
     removeTask: (id:string, todolistId:string)=> void
     changeFilter: (filter:FilterValuesType, todolistId:string)=> void
     addNewTask:(value:string,id:string)=>void
-    changeChecked:(id:string,todolistId:string)=>void
+    changeChecked:(id:string,todolistId:string, isChecked: boolean)=>void
     filter:FilterValuesType
     id:string
     removeTodolist:(id:string)=>void
@@ -71,8 +71,9 @@ export const Todolist = ({title,tasks,removeTask,changeFilter,addNewTask,changeC
                         const removeTaskHandler = () => {
                             removeTask(task.id,id)
                         }
-                        const changeCheckedHandler = () =>{
-                            changeChecked(task.id, id)
+                        const changeCheckedHandler = (value: boolean) =>{
+                            console.log(value)
+                            changeChecked(task.id, id, value)
                         }
                         const onChangeTaskTitleHandler=(newValue:string)=>{
                             changeTaskTitle(task.id,id,newValue)
@@ -82,8 +83,8 @@ export const Todolist = ({title,tasks,removeTask,changeFilter,addNewTask,changeC
                             <Box key={task.id}>
                                 <Checkbox
                                 color="success"
-                                checked={task.isDone}
-                                onClick={changeCheckedHandler}
+                                defaultChecked={task.isDone}
+                                onChange={(e)=>changeCheckedHandler(e.target.checked)}
                                 />
                                 <EditableSpan title={task.title} 
                                 isDone={task.isDone} 

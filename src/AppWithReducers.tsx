@@ -21,17 +21,17 @@ export type TaskStateType = {
 
 function AppWithReducers() {
   let todolistId1 = v1()
-  let todolistId2 = v1()
+  let todolistId2 = v1()+'2'
   let [tasks, dispatchTaskReducer]=useReducer( tasksReducer,{
     [todolistId1]:[
-      {id:v1(), title:'CSS', isDone:true},
-      {id:v1(), title:'JS', isDone:true},
-      {id:v1(), title:'React', isDone:false},
-      {id:v1(), title:'Redux', isDone:false}
+      {id:'00', title:'CSS', isDone:true},
+      {id:'01', title:'JS', isDone:true},
+      {id:'02', title:'React', isDone:false},
+      {id:'03', title:'Redux', isDone:false}
     ],
     [todolistId2]:[
-      {id:v1(), title:'Book', isDone:false},
-      {id:v1(), title:'Milk', isDone:true},
+      {id:'10', title:'Book', isDone:false},
+      {id:'11', title:'Milk', isDone:true},
     ]
   })
 
@@ -44,8 +44,8 @@ function AppWithReducers() {
     dispatchTaskReducer(action)
   }
 
-  const changeChecked= (id:string, todolistId:string) =>{
-    const action = changeCheckedTaskAC(todolistId,id)
+  const changeChecked= (id:string, todolistId:string, isChecked: boolean) =>{
+    const action = changeCheckedTaskAC(todolistId,id, isChecked)
     dispatchTaskReducer(action)
   }
 
@@ -108,11 +108,11 @@ function AppWithReducers() {
           if(tl.filter==="active"){
             tasksForToDoList=tasks[tl.id].filter((t:TaskType)=>{return t.isDone===false})
           }
+
         return (
-          <Grid item>
+          <Grid item key={tl.title}>
             <Paper>
               <Todolist 
-              key={tl.id}
               title={tl.title} 
               tasks={tasksForToDoList} 
               removeTask={removeTask}
