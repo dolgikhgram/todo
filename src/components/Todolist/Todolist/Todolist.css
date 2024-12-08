@@ -1,0 +1,20 @@
+.error{
+    border: red 1px solid;
+}
+
+.error-message{
+    color: red;
+}
+.active-btn{
+    background-color: aquamarine;
+}
+
+.name-container{
+    display: flex;
+}
+.btn-delete-task{
+    margin-left: 5px;
+    margin-top: 20px;
+    width: 25px;
+    height: 25px;
+}
