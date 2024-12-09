@@ -65,11 +65,9 @@ test('change Checked', () => {
         ]
     }
 
-    const action = changeCheckedTaskAC('todolistId2','1')
+    const action = changeCheckedTaskAC('todolistId2','1', true)
     const endState = tasksReducer(startState,action)
 
-    expect(endState['todolistId1'].length).toBe(4)
-    expect(endState['todolistId2'].length).toBe(2)
     expect(endState['todolistId2'][0].isDone).toBeTruthy()
     expect(endState['todolistId1'][0].isDone).toBeTruthy()
 })

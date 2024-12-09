@@ -19,7 +19,7 @@ export type TaskStateType = {
   [key: string]: Array<TaskType>
 }
 
-function AppWithReducers() {
+function AppWithRedux() {
   let todolistId1 = v1()
   let todolistId2 = v1()+'2'
   let [tasks, dispatchTaskReducer]=useReducer( tasksReducer,{
@@ -131,4 +131,4 @@ function AppWithReducers() {
 }
 
 
-export default AppWithReducers;
+export default AppWithRedux;
