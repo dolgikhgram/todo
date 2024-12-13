@@ -1,11 +1,13 @@
-import React from 'react';
-import { FilterValuesType } from "../../../App"
-import './Todolist.css'
+import React, { useCallback, useState } from 'react';import './Todolist.css'
 import AddNewTask from '../../AddNewTask/AddNewTask';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditableSpan from '../../EditableSpan/EditableSpan';
-import { Button, Checkbox, IconButton, Typography,Box} from '@mui/material';
-
+import { Button, Checkbox, IconButton, Typography,Box, Grid2} from '@mui/material';
+import { useSelector } from 'react-redux';
+import { AppRootState } from '../../../state/store';
+import { useDispatch } from 'react-redux';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';import { addTaskAC, changeCheckedTaskAC, changeTaskTitleAC, removeTaskAC, removeTaskCompletedAC } from '../../../state/tasks-reducer';
+import CheckCircleOutlineSharpIcon from '@mui/icons-material/CheckCircleOutlineSharp';import { FilterValuesType, TaskStateType } from '../../../AppWithRedux';
 export type TaskType = {
     id:string
     title:string
@@ -13,79 +15,88 @@ export type TaskType = {
 }
 type PropsType = {
     title:string
-    tasks:Array<TaskType>
-    removeTask: (id:string, todolistId:string)=> void
     changeFilter: (filter:FilterValuesType, todolistId:string)=> void
-    addNewTask:(value:string,id:string)=>void
-    changeChecked:(id:string,todolistId:string, isChecked: boolean)=>void
     filter:FilterValuesType
     id:string
     removeTodolist:(id:string)=>void
-    changeTaskTitle:(taskId:string,todolistId:string, newValue:string)=>void
     changeTodolistTitle:(todolistId:string, newValue:string)=>void
 }
-
-export const Todolist = ({title,tasks,removeTask,changeFilter,addNewTask,changeChecked,filter, id,removeTodolist,changeTaskTitle,changeTodolistTitle}:PropsType)=>{
-    
+export const Todolist = React.memo(({title, changeFilter,  filter, id, removeTodolist, changeTodolistTitle}:PropsType)=>{
+    const dispatch = useDispatch()
+    const tasks = useSelector<AppRootState, TaskStateType>(state=>state.tasks)
+    let count=0
     const changeFilterAllHandler = () => {
         changeFilter('all',id)
     }
     const changeFilterActiveHandler = () => {
         changeFilter('active',id)
     }
-    
+    const deleteCompletedTaskHandler = () =>{
+        dispatch(removeTaskCompletedAC(id))
+    }
     const changeFilterCompletedHandler = () => {
         changeFilter('completed',id)
     }
-
     const deleteTaskHandler = () =>{
         removeTodolist(id)
     }
-
-    const addTask = (title:string)=>{
-        addNewTask(title, id)
-    }
-
+    const addTask = useCallback ((title:string)=>{
+        dispatch(addTaskAC(id,title))
+    },[])
     const onChangeTodolistTitelHandler = (newValue:string)=>{
         changeTodolistTitle(id,newValue)
     }
-
+    let allTodolistTasks = tasks[id]
+    let tasksForToDoList = allTodolistTasks
+    if(filter==="completed"){
+        tasksForToDoList=allTodolistTasks.filter((t:TaskType)=>{return t.isDone===true})
+    }
+    if(filter==="active"){
+        tasksForToDoList=allTodolistTasks.filter((t:TaskType)=>{return t.isDone===false})
+    }
+    tasksForToDoList.map((el)=>{
+        if(!el.isDone) count++
+    })
     return (
         <div>
-            <div className='name-container'>
-                <Typography variant="h6">
-                    <EditableSpan 
-                        title={title} 
-                        isDone={false} 
-                        onChange={onChangeTodolistTitelHandler}/>
-                </Typography>
-                <IconButton onClick={deleteTaskHandler}>
-                    <DeleteIcon  fontSize="small" />
-                </IconButton>
-            </div>
-            <AddNewTask addItem={addTask}/>
-            <ul>
+            <Box className='border-todolist-name'>
+                <Box ml={1.5} className='name-container'>
+                    <Typography variant="h6">
+                        <EditableSpan 
+                            title={title} 
+                            isDone={false} 
+                            onChange={onChangeTodolistTitelHandler}/>
+                    </Typography>
+                    <IconButton onClick={deleteTaskHandler}>
+                        <DeleteIcon  fontSize="small" />
+                    </IconButton>
+                </Box>
+            </Box>
+            <Box ml={1.5}>
+                <AddNewTask addItem={addTask}/>
+            </Box>
                 {
-                    tasks.map((task)=>{
-
+                    tasksForToDoList.map((task:TaskType)=>{
                         const removeTaskHandler = () => {
-                            removeTask(task.id,id)
+                            dispatch(removeTaskAC(id,task.id))
                         }
-                        const changeCheckedHandler = (value: boolean) =>{
-                            changeChecked(task.id, id, value)
+                        const changeCheckedHandler = (e:any) =>{
+                            dispatch(changeCheckedTaskAC(id,task.id, e.target.checked))
                         }
                         const onChangeTaskTitleHandler=(newValue:string)=>{
-                            changeTaskTitle(task.id,id,newValue)
+                            dispatch(changeTaskTitleAC(id,task.id,newValue))
                         }
-
                         return (
-                            <Box key={task.id}>
+                            <Box key={task.id} className='task-container' >
                                 <Checkbox
+                                icon={<RadioButtonUncheckedIcon/>}
+                                checkedIcon={<CheckCircleOutlineSharpIcon/>}
                                 color="success"
-                                defaultChecked={task.isDone}
-                                onChange={(e)=>changeCheckedHandler(e.target.checked)}
+                                checked={task.isDone}
+                                onClick={(e)=>changeCheckedHandler(e)}
                                 />
-                                <EditableSpan title={task.title} 
+                                <EditableSpan 
+                                title={task.title} 
                                 isDone={task.isDone} 
                                 onChange={onChangeTaskTitleHandler}/>
                                 <IconButton onClick={removeTaskHandler}>
@@ -95,27 +106,40 @@ export const Todolist = ({title,tasks,removeTask,changeFilter,addNewTask,changeC
                         )
                     })
                 }
-            </ul>
-            <div>
-                <Button onClick={changeFilterAllHandler} 
-                    variant={filter==='all' ? 'contained' : 'text'}>
-                    All
-                </Button>
-                <Button onClick={changeFilterActiveHandler}
-                    color='success'
-                    variant={filter==='active' ? 'contained' : 'text'}>
-                    Active
-                </Button>
-                <Button onClick={changeFilterCompletedHandler}
-                    color="secondary"
-                    variant={filter==='completed' ? 'contained' : 'text'}>
-                    Completed
-                </Button>
+            <div className='filters-container'>
+                <Box mt={0.5}>
+                    <Grid2 container spacing={1.5}>
+                        <Box mt={1.5} ml={2}>
+                            {count} items left
+                        </Box>
+                        <Box mt={1} ml={1}>
+                            <Button onClick={changeFilterAllHandler}
+                                size="small" 
+                                variant={filter==='all' ? 'outlined' : 'text'}>
+                                All
+                            </Button>
+                            <Button onClick={changeFilterActiveHandler}
+                                size="small"
+                                color='success'
+                                variant={filter==='active' ? 'outlined' : 'text'}>
+                                Active
+                            </Button>
+                            <Button onClick={changeFilterCompletedHandler}
+                                size="small"
+                                color="secondary"
+                                variant={filter==='completed' ? 'outlined' : 'text'}>
+                                Completed
+                            </Button>
+                        </Box>
+                        <Box mb={1} ml={2}>
+                            <IconButton onClick={deleteCompletedTaskHandler}>
+                                <DeleteIcon  fontSize="small" />
+                                <Typography>Clear completed</Typography>
+                            </IconButton>
+                        </Box>
+                    </Grid2>
+                </Box>
             </div>
         </div>
     )
-}
-
-
-
-
+})

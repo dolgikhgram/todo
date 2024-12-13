@@ -30,7 +30,10 @@ const EditableSpan = ({title, isDone,onChange}:EditableSpanPropsType) =>{
                 <span 
                 onDoubleClick={activateEditMode}
                 className={isDone ? 'is-done' : ''}>
-                    {title}
+                    {
+                        isDone ? <del>{title}</del> 
+                        : title
+                    }
                 </span>  
                 :
                 <TextField

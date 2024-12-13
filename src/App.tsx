@@ -37,13 +37,6 @@ function App() {
     {id: todolistId1 , title:"what to learn", filter: "all"},
     {id: todolistId2, title:"what to buy", filter:"all"}
   ])  
-  const addNewTask= (value:string, id:string) =>{
-    if(value.trim().length!==0){
-      let newTasks = {...tasks}
-      newTasks[id].unshift({id:v1(), title: value.trim(), isDone:false})
-      setTasks(newTasks)
-  }
-  }
 
   const changeChecked= (id:string, todolistId:string) =>{
     let currentTask = tasks[todolistId]
@@ -56,17 +49,6 @@ function App() {
   const removeTask = (id:string,todolistId:string)=>{
     tasks[todolistId]=tasks[todolistId].filter((t:TaskType) => {return (t.id!==id)})
     setTasks({...tasks})
-  }
-
-  const changeTaskTitle = (taskId:string,todolistId:string, newValue:string) =>{
-    if(newValue.trim().length!==0){
-      tasks[todolistId].map((el)=>{
-        if (el.id===taskId){
-          el.title=newValue
-        }
-      })
-      setTasks({...tasks})
-    }
   }
 
   const changeTodolistTitle = (todolistId:string, newValue:string)=>{
@@ -140,15 +122,10 @@ function App() {
               <Todolist 
               key={tl.id}
               title={tl.title} 
-              tasks={tasksForToDoList} 
-              removeTask={removeTask}
               changeFilter={changeFilter}
-              addNewTask={addNewTask}
-              changeChecked={changeChecked}
               filter={tl.filter}
               id={tl.id}
               removeTodolist={removeTodolist}
-              changeTaskTitle={changeTaskTitle}
               changeTodolistTitle={changeTodolistTitle}/>
             </Paper>
           </Grid>

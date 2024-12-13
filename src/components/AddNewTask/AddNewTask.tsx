@@ -8,12 +8,12 @@ type AddNewTaskPropsType = {
 }
 
 
-const AddNewTask  = ({addItem}:AddNewTaskPropsType)=>{
+const AddNewTask  = React.memo(({addItem}:AddNewTaskPropsType)=>{
     const [newTask,setNewTask] = useState("")
     const [error,setError]=useState(false)
     const CreateNewTask = (value:string)=>{
         setNewTask(value)
-        setError(false)
+        if (error) setError(false)
     }
     const onNewTitleChangeHandler = (e:ChangeEvent<HTMLInputElement>)=>{
         CreateNewTask(e.target.value)
@@ -48,6 +48,6 @@ const AddNewTask  = ({addItem}:AddNewTaskPropsType)=>{
                 </IconButton>
             </div>
     )
-}
+})
 
 export default AddNewTask
