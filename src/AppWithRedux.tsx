@@ -35,16 +35,16 @@ function AppWithReducers() {
   return (
     <div className="App">
       <Box display={'flex'} justifyContent='center' m={3}>
-        <Typography variant='h2' color='primary'> todos</Typography>
+        <Typography variant='h2' color='secondary'> todos</Typography>
       </Box>
       <Container fixed >
-        <div className='add-new-todolists'>
+        {/* <div className='add-new-todolists'>
           <Box display={'flex'} justifyContent='center' m={3}>
             <Grid container justifyContent={'center'}>
               <AddNewTask addItem={addTodolist}/>
             </Grid>
           </Box>
-        </div>
+        </div> */}
           <Grid container spacing={4} justifyContent={'center'}>
             {todolists.map((tl)=>{
               return (

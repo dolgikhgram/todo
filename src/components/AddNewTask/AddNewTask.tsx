@@ -1,7 +1,7 @@
 import {IconButton, TextField} from "@mui/material"
 import React,{useState,ChangeEvent,KeyboardEvent} from "react"
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import  "./AddNewTask.css"
+import  "./AddNewTask.css" 
 
 type AddNewTaskPropsType = {
     addItem:(value:string)=>void
@@ -33,8 +33,9 @@ const AddNewTask  = React.memo(({addItem}:AddNewTaskPropsType)=>{
     return (
         <div>
                 <TextField
-                label="Type value"
+                label="what needs to be done?"
                 className="text-input"
+                color="secondary"
                 variant="standard"
                 helperText={ error ?'Field is required' : ''}
                 onChange={onNewTitleChangeHandler} 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';import './Todolist.css'
+import React, { useCallback} from 'react';import './Todolist.css'
 import AddNewTask from '../../AddNewTask/AddNewTask';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditableSpan from '../../EditableSpan/EditableSpan';
@@ -62,19 +62,16 @@ export const Todolist = React.memo(({title, changeFilter,  filter, id, removeTod
             <Box className='border-todolist-name'>
                 <Box ml={1.5} className='name-container'>
                     <Typography variant="h6">
-                        <EditableSpan 
-                            title={title} 
-                            isDone={false} 
-                            onChange={onChangeTodolistTitelHandler}/>
+                        <AddNewTask addItem={addTask}/>
                     </Typography>
-                    <IconButton onClick={deleteTaskHandler}>
+                    {/* <IconButton onClick={deleteTaskHandler}>
                         <DeleteIcon  fontSize="small" />
-                    </IconButton>
+                    </IconButton> */}
                 </Box>
             </Box>
-            <Box ml={1.5}>
+            {/* <Box ml={1.5}>
                 <AddNewTask addItem={addTask}/>
-            </Box>
+            </Box> */}
                 {
                     tasksForToDoList.map((task:TaskType)=>{
                         const removeTaskHandler = () => {
@@ -99,9 +96,9 @@ export const Todolist = React.memo(({title, changeFilter,  filter, id, removeTod
                                 title={task.title} 
                                 isDone={task.isDone} 
                                 onChange={onChangeTaskTitleHandler}/>
-                                <IconButton onClick={removeTaskHandler}>
+                                {/* <IconButton onClick={removeTaskHandler}>
                                     <DeleteIcon  fontSize="small" />
-                                </IconButton>
+                                </IconButton> */}
                             </Box>
                         )
                     })
@@ -114,13 +111,14 @@ export const Todolist = React.memo(({title, changeFilter,  filter, id, removeTod
                         </Box>
                         <Box mt={1} ml={1}>
                             <Button onClick={changeFilterAllHandler}
-                                size="small" 
+                                size="small"
+                                color='secondary' 
                                 variant={filter==='all' ? 'outlined' : 'text'}>
                                 All
                             </Button>
                             <Button onClick={changeFilterActiveHandler}
                                 size="small"
-                                color='success'
+                                color='secondary'
                                 variant={filter==='active' ? 'outlined' : 'text'}>
                                 Active
                             </Button>
@@ -131,7 +129,7 @@ export const Todolist = React.memo(({title, changeFilter,  filter, id, removeTod
                                 Completed
                             </Button>
                         </Box>
-                        <Box mb={1} ml={2}>
+                        <Box mb={1} ml={1}>
                             <IconButton onClick={deleteCompletedTaskHandler}>
                                 <DeleteIcon  fontSize="small" />
                                 <Typography>Clear completed</Typography>
