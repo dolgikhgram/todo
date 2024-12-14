@@ -1,6 +1,6 @@
 {
   "name": "todolist-project",
-  "homepage": "https://dolgikgram.github.io/todolist",
+  "homepage": "https://dolgikgram.github.io/todo",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
